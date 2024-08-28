@@ -43,6 +43,7 @@ struct Args {
 	file: Vec<String>
 }
 
+
 fn main() -> io::Result<()>{
 	let args = Args::parse();
 	match args { Args { .. } => {
