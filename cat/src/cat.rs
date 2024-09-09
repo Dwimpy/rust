@@ -15,8 +15,7 @@ pub struct Cat {
 
 
 impl Cat {
-
-	pub fn new(flags: Flags, files: Vec<String> ) -> Self {
+	pub fn new(flags: Flags, files: Vec<String>) -> Self {
 		Cat {
 			suppress: flags.contains(Flags::SQUEEZE_BLANK),
 			files,
@@ -24,20 +23,36 @@ impl Cat {
 		}
 	}
 
-	pub fn run(&mut self) -> io::Result<()>{
+	pub fn run(&mut self) -> io::Result<()> {
 		let mut lines: Vec<String> = Vec::new();
 		let mut result: Vec<String> = Vec::new();
 
-		for file in &self.files {
-			let mut reader = InputReader::from_file(file)?;
-			while let Some(line) = reader.read_line()? {
-				if self.suppress {
-					if lines.iter().last() == Some(&"\n".to_string()) && line == "\n" {
+		if self.files.is_empty() {
+			let mut reader = InputReader::from_stdin();
+			loop {
+				if let Some(line) = reader.read_line()? {
+					lines.push(line);
+					for line in &lines {
+						result.push(self.pipeline.execute(&line));
+					}
+					print!("{}", result.join(""));
+					lines.clear();
+					result.clear();
+				} else {
+					return Ok(())
+				}
+			}
+		} else {
+			for file in &self.files {
+				let mut reader = InputReader::from_file(file)?;
+				while let Some(line) = reader.read_line()? {
+					if self.suppress {
+						if lines.iter().last() == Some(&"\n".to_string()) && line == "\n" {} else {
+							lines.push(line);
+						}
 					} else {
 						lines.push(line);
 					}
-				} else {
-					lines.push(line);
 				}
 			}
 		}
@@ -48,4 +63,3 @@ impl Cat {
 		Ok(())
 	}
 }
-

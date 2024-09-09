@@ -56,33 +56,3 @@ fn main() -> io::Result<()>{
 	app.run().expect("Failed to run");
 	Ok(())
 }
-
-// fn  process_lines(vec: &Vec<String>) -> io::Result<()>{
-//
-//
-// 	for file in vec {
-// 		let mut reader = InputReader::from_file(&file)?;
-// 		loop {
-// 			let mut line = reader.read_line()?;
-// 			match &mut line {
-// 				None => { print!("EOF REACHED"); break ; },
-// 				Some(line) => {
-// 					for c in &line.chars() {
-// 						print!("{}", c);
-// 						pipeline.execute(line, &c);
-// 					}
-// 				}
-// 			}
-// 		}
-// 		// }
-// 	}
-// 	Ok(())
-// }
-
-pub fn print_hello(c: &char) {
-	if *c == 't' {
-		print!("cucu");
-	} else {
-		print!("{}", c);
-	}
-}

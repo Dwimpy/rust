@@ -17,7 +17,12 @@ pub struct NumberHandler;
 
 impl Handler for ShowEndsHandler {
 	fn handle(&self, line: &mut String) {
-		*line = line.replace("\n", "$\n");
+		if line.contains("\r\n") {
+			*line = line.replace("\r\n", "$\r\n");
+		}
+		else if line.contains("\n") {
+			*line = line.replace("\n", "$\n");
+		}
 	}
 }
 
@@ -49,6 +54,7 @@ impl Handler for ShowNonPrintingHandler {
 			match c {
 				'\n' => '\n'.to_string(),
 				'\t' => '\t'.to_string(),
+				'\r' => '\r'.to_string(),
 				c if c.is_control() => format!("^{}", (c as u8 + 64) as char),  // Control chars to caret notation
 				_ => c.to_string(),        // Other characters remain the same
 			}
